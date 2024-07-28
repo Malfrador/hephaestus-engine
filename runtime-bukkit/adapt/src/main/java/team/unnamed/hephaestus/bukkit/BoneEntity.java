@@ -21,15 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package team.unnamed.hephaestus.bukkit.v1_20_R3;
+package team.unnamed.hephaestus.bukkit;
 
 import com.mojang.math.Transformation;
-import net.kyori.adventure.nbt.BinaryTagTypes;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.nbt.TagStringIO;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -40,6 +36,8 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Color;
 import org.jetbrains.annotations.NotNull;
@@ -48,16 +46,9 @@ import org.joml.Vector3f;
 import team.unnamed.creative.base.Vector3Float;
 import team.unnamed.hephaestus.Bone;
 import team.unnamed.hephaestus.Hephaestus;
-import team.unnamed.hephaestus.Minecraft;
-import team.unnamed.hephaestus.bukkit.BoneView;
 import team.unnamed.hephaestus.util.Quaternion;
 import team.unnamed.hephaestus.view.modifier.BoneModifierMap;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -197,28 +188,10 @@ public class BoneEntity extends Display.ItemDisplay implements BoneView, BoneMod
     @Override
     public void updateItem() {
         final var itemKey = modifiers.modifyItem(Hephaestus.BONE_ITEM_KEY);
-        final var tag = modifiers.modifyItemTag(CompoundBinaryTag.builder()
-                .put(Minecraft.DISPLAY_TAG, CompoundBinaryTag.builder()
-                        .putInt(Minecraft.COLOR_TAG, color)
-                        .build())
-                .putInt(Minecraft.CUSTOM_MODEL_DATA_TAG, bone.customModelData())
-                .build());
-
-        final var item = BuiltInRegistries.ITEM.get(new ResourceLocation(itemKey.namespace(), itemKey.value()));
+        final var item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(itemKey.namespace(), itemKey.value()));
         final var itemStack = new ItemStack(item, 1);
-
-        try {
-            final var bytes = new ByteArrayOutputStream();
-            final var output = new DataOutputStream(bytes);
-            BinaryTagTypes.COMPOUND.write(tag, output);
-            output.flush();
-
-            final var nmsTag = CompoundTag.TYPE.load(new DataInputStream(new ByteArrayInputStream(bytes.toByteArray())), NbtAccounter.unlimitedHeap());
-            itemStack.setTag(nmsTag);
-        } catch (final IOException e) {
-            throw new RuntimeException("Failed to write item tag", e);
-        }
-
+        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(bone.customModelData()));
+        itemStack.set(DataComponents.DYED_COLOR, new DyedItemColor(color, false));
         setItemStack(itemStack);
     }
 
