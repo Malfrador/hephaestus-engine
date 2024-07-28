@@ -24,18 +24,6 @@ tasks {
     reobfJar {
         outputJar = file("build/libs/hephaestus-runtime-bukkit-adapt-v1_21_R1-reobf.jar")
     }
-    create<Sign>("signReobfJar") {
-        dependsOn(reobfJar)
-        description = "Signs the reobfuscated adapt jar"
-        val signature = Signature(
-                { reobfJar.get().outputJar.get().asFile },
-                { "reobf" },
-                this,
-                this
-        )
-        signatures.add(signature)
-        outputs.files(signature.file)
-    }
 }
 
 publishing {
@@ -43,11 +31,6 @@ publishing {
         getByName<MavenPublication>("maven") {
             artifact(tasks.reobfJar) {
                 classifier = "reobf"
-            }
-            // Reobf JAR Signature
-            artifact(tasks.named("signReobfJar")) {
-                classifier = "reobf"
-                extension = "asc"
             }
         }
     }

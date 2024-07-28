@@ -1,7 +1,6 @@
 plugins {
     id("hephaestus.common-conventions")
     `maven-publish`
-    signing
 }
 
 val repositoryName: String by project
@@ -47,8 +46,4 @@ publishing {
             }
         }
     }
-}
-
-signing {
-    sign(publishing.publications["maven"])
 }

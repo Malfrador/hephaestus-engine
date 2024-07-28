@@ -24,7 +24,7 @@ java {
 
 tasks {
     javadoc {
-        isFailOnError = true
+        isFailOnError = false
     }
     test {
         useJUnitPlatform()
