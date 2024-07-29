@@ -6,6 +6,7 @@ plugins {
 
 repositories {
     maven("https://libraries.minecraft.net/")
+    maven("https://erethon.de/repo/")
 }
 
 tasks {
@@ -15,7 +16,7 @@ tasks {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+    paperweight.devBundle("de.erethon.papyrus", "1.21-R0.1-SNAPSHOT") { isChanging = true }
 
     implementation(project(":hephaestus-runtime-bukkit-api"))
 }

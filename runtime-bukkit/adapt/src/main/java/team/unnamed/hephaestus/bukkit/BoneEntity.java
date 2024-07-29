@@ -102,7 +102,8 @@ public class BoneEntity extends Display.ItemDisplay implements BoneView, BoneMod
                 EntityType.ITEM_DISPLAY, // item display
                 0, // entity data: unused
                 Vec3.ZERO, // velocity: unused
-                0 // head yaw: We don't use this
+                0, // head yaw: We don't use this
+                this // Papyrus stuff
         ));
         packetConsumer.accept(new ClientboundSetEntityDataPacket(entityId(), initialData));
     }
