@@ -177,6 +177,20 @@ public class ModelCommand implements CommandExecutor, TabCompleter {
                                 .build()
                 );
             }
+            case "disguise" -> {
+                String modelName = args[1];
+                @Nullable Model model = registry.model(modelName);
+                final var view = engine.spawn(model, player);
+                player.sendMessage(
+                        Component.text()
+                                .append(Component.text("Created view with id "))
+                                .append(Component.text(view.getUniqueId().toString(), NamedTextColor.DARK_GREEN))
+                                .append(Component.text(" with model "))
+                                .append(Component.text(model.name(), NamedTextColor.DARK_GREEN))
+                                .color(NamedTextColor.GREEN)
+                                .build()
+                );
+            }
             case "spawnplayer" -> {
                 if (args.length != 2) {
                     sender.sendMessage(Component.text("/" + label + " spawnplayer <skin>", NamedTextColor.RED));
@@ -301,12 +315,17 @@ public class ModelCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 1) {
             // complete the subcommand
-            StringUtil.copyPartialMatches(subcommand, List.of("spawn", "spawnplayer", "view"), suggestions);
+            StringUtil.copyPartialMatches(subcommand, List.of("spawn", "spawnplayer", "spawnat", "disguise", "view"), suggestions);
             return suggestions;
         }
 
         switch (subcommand) {
             case "spawn" -> {
+                if (args.length == 2) {
+                    StringUtil.copyPartialMatches(args[1], registry.modelNames(), suggestions);
+                }
+            }
+            case "disguise" -> {
                 if (args.length == 2) {
                     StringUtil.copyPartialMatches(args[1], registry.modelNames(), suggestions);
                 }

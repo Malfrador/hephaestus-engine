@@ -17,6 +17,7 @@ tasks {
 
 dependencies {
     paperweight.devBundle("de.erethon.papyrus", "1.21-R0.1-SNAPSHOT") { isChanging = true }
+    //paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT") { isChanging = true }
 
     implementation(project(":hephaestus-runtime-bukkit-api"))
 }

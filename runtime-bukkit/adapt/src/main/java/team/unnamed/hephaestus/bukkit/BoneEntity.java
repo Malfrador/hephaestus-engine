@@ -103,7 +103,7 @@ public class BoneEntity extends Display.ItemDisplay implements BoneView, BoneMod
                 0, // entity data: unused
                 Vec3.ZERO, // velocity: unused
                 0, // head yaw: We don't use this
-                this // Papyrus stuff
+                this
         ));
         packetConsumer.accept(new ClientboundSetEntityDataPacket(entityId(), initialData));
     }

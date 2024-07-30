@@ -23,7 +23,12 @@ tasks {
         downloadPlugins {
             modrinth("central", "1.3.0") // creative-central
         }
-
+        if (!project.buildDir.exists()) {
+            project.buildDir.mkdir()
+        }
+        val f = File(project.buildDir, "server.jar");
+        uri("https://github.com/DRE2N/Papyrus/releases/download/latest/papyrus-paperclip-1.21-R0.1-SNAPSHOT-mojmap.jar").toURL().openStream().use { it.copyTo(f.outputStream()) }
+        serverJar(f)
         minecraftVersion("1.21")
     }
     shadowJar {
